@@ -1,0 +1,209 @@
+{
+    "sample_patient_data": {
+        "patient_id": "example-uuid-123",
+        "profile": {
+            "name": "Jane Smith",
+            "age": 45,
+            "gender": "female"
+        },
+        "visits": [
+            {
+                "visit_id": "visit-uuid-001",
+                "date": "2024-01-15T10:30:00",
+                "symptoms": [
+                    "fever",
+                    "fatigue",
+                    "weakness"
+                ],
+                "recommended_tests": [
+                    {
+                        "test_name": "CBC",
+                        "reason": "Complete Blood Count is recommended for your symptoms of fever, fatigue, and weakness. These symptoms may indicate infection, anemia, or inflammation, which CBC can help identify by measuring your blood cell counts.",
+                        "status": "recommended"
+                    },
+                    {
+                        "test_name": "CRP",
+                        "reason": "C-Reactive Protein test is recommended because fever suggests possible infection or inflammation. CRP is a marker that becomes elevated during inflammatory conditions and can help assess the severity.",
+                        "status": "recommended"
+                    },
+                    {
+                        "test_name": "Lipid_Profile",
+                        "reason": "Lipid Profile is recommended as part of routine cardiovascular screening for adults over 40. This helps assess your risk for heart disease by measuring cholesterol and triglyceride levels.",
+                        "status": "recommended"
+                    }
+                ],
+                "skipped_tests": [],
+                "lab_results": [
+                    {
+                        "test_name": "CBC",
+                        "parameters": [
+                            {
+                                "name": "hemoglobin",
+                                "value": 11.5,
+                                "unit": "g/dL",
+                                "reference_range": "12.0-15.5 (F)",
+                                "is_abnormal": true
+                            },
+                            {
+                                "name": "wbc",
+                                "value": 12500,
+                                "unit": "cells/mcL",
+                                "reference_range": "4,000-11,000",
+                                "is_abnormal": true
+                            },
+                            {
+                                "name": "platelets",
+                                "value": 250000,
+                                "unit": "cells/mcL",
+                                "reference_range": "150,000-400,000",
+                                "is_abnormal": false
+                            }
+                        ],
+                        "test_date": "2024-01-15T14:00:00"
+                    }
+                ],
+                "interpretations": {
+                    "patient_friendly": "Your blood test shows two abnormal values. Your hemoglobin is slightly low at 11.5 g/dL (normal is 12.0-15.5), which means you may have mild anemia causing your fatigue. Your white blood cell count is elevated at 12,500 (normal is 4,000-11,000), suggesting your body is fighting an infection or inflammation, which explains your fever. Your platelet count is normal, which is good for blood clotting. Please follow up with your doctor to discuss treatment options.",
+                    "clinician_summary": "CBC results indicate mild anemia (Hgb 11.5 g/dL) and leukocytosis (WBC 12,500). The combination of low hemoglobin and elevated WBC in context of fever and fatigue suggests possible infectious process with concurrent anemia. Differential diagnosis should consider acute infection with anemia of chronic disease, or underlying inflammatory condition. Recommend further workup including CRP, iron studies, and peripheral smear. Follow-up in 1-2 weeks to reassess CBC after treatment initiation."
+                }
+            },
+            {
+                "visit_id": "visit-uuid-002",
+                "date": "2024-02-20T11:00:00",
+                "symptoms": [
+                    "headache",
+                    "fatigue"
+                ],
+                "recommended_tests": [
+                    {
+                        "test_name": "Thyroid_Panel",
+                        "reason": "Thyroid Function Tests are recommended for persistent fatigue. Thyroid disorders can cause chronic fatigue, and checking TSH, T3, and T4 levels will help rule out hypothyroidism or hyperthyroidism as the cause of your symptoms.",
+                        "status": "recommended"
+                    }
+                ],
+                "skipped_tests": [
+                    {
+                        "test_name": "CBC",
+                        "reason": "Your Complete Blood Count test from January 15, 2024 is still valid. CBC results remain relevant for 90 days, so we have about 54 days remaining before a repeat test would be needed. Since you had this test recently and there's no urgent indication, we can safely skip it for now.",
+                        "last_test_date": "2024-01-15T14:00:00"
+                    }
+                ],
+                "lab_results": [],
+                "interpretations": null
+            }
+        ]
+    },
+    "sample_api_requests": {
+        "register_patient": {
+            "endpoint": "POST /api/patient/register",
+            "request_body": {
+                "profile": {
+                    "name": "John Doe",
+                    "age": 35,
+                    "gender": "male"
+                },
+                "symptoms": [
+                    "fever",
+                    "joint pain"
+                ]
+            },
+            "expected_response": {
+                "patient_id": "generated-uuid",
+                "visit_id": "generated-uuid",
+                "recommended_tests": [
+                    {
+                        "test_name": "CBC",
+                        "reason": "AI-generated explanation...",
+                        "status": "recommended"
+                    },
+                    {
+                        "test_name": "CRP",
+                        "reason": "AI-generated explanation...",
+                        "status": "recommended"
+                    }
+                ],
+                "skipped_tests": []
+            }
+        },
+        "upload_lab_results": {
+            "endpoint": "POST /api/lab-results/upload",
+            "request_body": {
+                "patient_id": "existing-patient-id",
+                "visit_id": "existing-visit-id",
+                "lab_results": [
+                    {
+                        "test_name": "Blood_Glucose",
+                        "parameters": [
+                            {
+                                "name": "glucose",
+                                "value": 145,
+                                "unit": "mg/dL",
+                                "reference_range": "70-100 (fasting)",
+                                "is_abnormal": true
+                            }
+                        ],
+                        "test_date": "2024-01-20T09:00:00"
+                    }
+                ]
+            },
+            "expected_response": {
+                "message": "Lab results uploaded successfully",
+                "interpretations": {
+                    "patient_friendly": "Your fasting blood glucose is elevated at 145 mg/dL...",
+                    "clinician_summary": "Fasting glucose of 145 mg/dL exceeds diagnostic threshold..."
+                }
+            }
+        }
+    },
+    "test_scenarios": {
+        "scenario_1": {
+            "name": "Young patient with fever",
+            "patient": {
+                "age": 28,
+                "gender": "female",
+                "symptoms": [
+                    "fever",
+                    "weakness"
+                ]
+            },
+            "expected_tests": [
+                "CBC",
+                "CRP"
+            ],
+            "rationale": "Fever indicates possible infection requiring blood work"
+        },
+        "scenario_2": {
+            "name": "Middle-aged patient with cardiovascular risk",
+            "patient": {
+                "age": 52,
+                "gender": "male",
+                "symptoms": [
+                    "chest pain"
+                ]
+            },
+            "expected_tests": [
+                "CBC",
+                "Lipid_Profile"
+            ],
+            "rationale": "Age > 50 triggers routine lipid screening, chest pain requires cardiac risk assessment"
+        },
+        "scenario_3": {
+            "name": "Patient with metabolic symptoms",
+            "patient": {
+                "age": 40,
+                "gender": "female",
+                "symptoms": [
+                    "frequent urination",
+                    "fatigue"
+                ]
+            },
+            "expected_tests": [
+                "Blood_Glucose",
+                "Kidney_Function",
+                "CBC",
+                "Thyroid_Panel"
+            ],
+            "rationale": "Frequent urination and fatigue suggest diabetes or kidney issues, plus thyroid screening"
+        }
+    }
+}
