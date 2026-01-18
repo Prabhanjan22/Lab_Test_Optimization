@@ -1,5 +1,9 @@
 # .gitignore for Lab Test Optimization System
 
+# Documentation
+*.md
+!README.md
+
 # Python
 __pycache__/
 *.py[cod]
